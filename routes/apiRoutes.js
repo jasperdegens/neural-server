@@ -35,10 +35,10 @@ router.post('/job/complete', function(req, res, next){
     final_image = final_image;
     job.save(function(err){
       if(err){next(err, req, res); return;}
-      
       res.send(job);        
+    });
   });
-}
+});
 
 /* POST -- create job 
  * tasks:
@@ -87,7 +87,7 @@ router.post('/job', uploadImgs, function(req, res, next) {
 //   5. Return s3 bucket key for file
 function processImage(file){
   return uploadImageLocal(file)
-//  .then(resizeImage)
+  .then(resizeImage)
   .then(function(localPath){
     return uploadToS3(localPath)
     .then(function(cloudPath) {
@@ -144,18 +144,15 @@ function resizeImage(path){
       // need to resize with scale of 2 digits
       var scale = Math.floor((600.*100.) / largest) / 100;
       console.log('scale is: ' + scale);
-      image.resize(.4, function(err, img){
-        console.log(img);
+      
+      image.batch()
+      .scale(scale)
+      .writeFile(path, function(err){
         if(err){deferred.reject(err);}
-        console.log('resizing image');
-        img.writeFile(path, function(err){
-          if(err){deferred.reject(err);}
-          deferred.resolve(path);
-        });
+        deferred.resolve(path);
       });
-    // if no need to resize  
     } else {
-      deferred.resolve(path); 
+      deferred.resolve(path);
     }
   });
   return deferred.promise;
