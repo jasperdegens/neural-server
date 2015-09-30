@@ -1,14 +1,36 @@
 extends layout
 
+mixin filedrop(name, description)
+  .drop-area
+    .drop-description
+      .file-input.uk-button-large.uk-button-success
+        span= description  
+        input(type="file", name="#{name}", accept="image/*")
+      p or
+      h4 drag and drop
+      
+
 block content
-  form(action="/api/job", method="post", enctype="multipart/form-data")
-    p Email
-    input(type="email", required, name="email")
-    p Content Image
-    input(type="file", name="content_image", accept="image/*")
-    p Style Image
-    input(type="file", name="style_image", accept="image/*")
-    p Public?
-    input(type="checkbox" name="isPublic")
-    br
-    button(type="submit", role="submit") Submit
+  .uk-container.uk-container-center.center.container-white
+    .intro
+      h1 Welcome
+      p You found one of the coolest things on the web. Congratulations! Submit a photo of yours and a picture of an artist you like and your photo is magically redrawn using the artist's style. Or try any other crazy experient and see what happens.
+
+  .uk-container.uk-container-center.container-white.center
+    form.uk-form.uk-form-horizontal(action="/api/job", method="post", enctype="multipart/form-data")
+      .uk-grid(data-uk-grid-margin)
+        .uk-width-1-2
+          +filedrop('content_image', 'Upload Your Photo')
+        .uk-width-1-2
+          +filedrop('style_image', 'Upload Painting')
+       .form-field-container
+         .uk-form-row
+           label.uk-form-label(for="email") Email
+           .uk-form-controls: input(type="email", required, name="email")
+         .uk-form-row
+           label.uk-form-label(for="isPublic") Public?
+           .uk-form-controls: input(type="checkbox", name="isPublic")
+       button.uk-button Submit
+
+  
+  // p Running the processing server can take a while and is quite expensive (I'm not made of money guys), so it is scheduled to run once every night. You will receive an email with a link to your photo when the image has been processed.

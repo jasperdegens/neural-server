@@ -30,13 +30,24 @@ router.post('/job/complete', function(req, res, next){
   var final_image = req.body.final_image;
   Job.findById(id, function(err, job){
     if(err) {next(err, req, res); return;}
-    job.date_completed = new Date.now;
+    job.date_completed = Date.now();
     job.job_complete = true;
-    final_image = final_image;
+    job.final_image = final_image;
     job.save(function(err){
       if(err){next(err, req, res); return;}
       res.send(job);        
     });
+  });
+});
+
+/* GET completed jobs to view */
+router.get('/jobs/complete', function(req, res, next){
+  Job.find({isPublic : true, job_complete : true}, 
+           {content_image : 1, style_image : 1, 
+            final_image : 1, date_completed : 1},
+  function(err, jobs){
+    if(err) {next(err, req, res); return;}
+    res.render('jobs', {jobs: jobs});
   });
 });
 

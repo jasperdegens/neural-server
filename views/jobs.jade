@@ -1,0 +1,14 @@
+extends layout
+
+mixin cloudImage(image)
+  a(href="http://neural-style.s3-website-us-east-1.amazonaws.com/#{image}")
+    p #{image}
+
+block content
+  each job, index in jobs
+    p Content Image
+    +cloudImage(job.content_image)
+    p Style Image
+    +cloudImage(job.style_image)
+    p Final Image
+    +cloudImage(job.final_image) 

@@ -2,6 +2,27 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='/stylesheets/uikit.almost-flat.min.css')
+    //link(rel='stylesheet', href='/stylesheets/uikit.min.css')
+    link(href='https://fonts.googleapis.com/css?family=Hind+Vadodara:300,700,500', rel='stylesheet', type='text/css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    header
+      .uk-container.uk-container-center
+        .uk-grid
+          .title.uk-width-medium-1-2.uk-width-small-1-1
+            h1 Neural Painter
+            p Give your photos a bit of style
+          .uk-width-medium-1-2.relative.uk-width-small-1-1
+             nav.uk-navbar
+                .uk-navbar-flip
+                  ul.uk-navbar-nav
+                    li: a(href="/jobs/complete") Examples
+    .content
+      block content
+
+    footer
+      .uk-container.uk-container-center
+        .uk-width-1-1
+          p Contact <a href="mailto:jasperdegens@gmail.com">Jasper Degens</a> with any questions
+    script(src='/javascripts/main.js')
