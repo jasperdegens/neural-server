@@ -8,11 +8,13 @@ var s3 = new AWS.S3({region: 'us-east-1'});
 var BUCKET = 'neural-style';
 var fs = require('fs');
 var Q = require('q');
+var config = require('../config');
+var sendgrid = require('sendgrid')(config.sendgrid);
 
 
 /* GET current jobs. */
 router.get('/jobs', function(req, res, next) {
-  Job.find({job_complete : false}, 
+  Job.find({job_complete : false},
            {_id : 1, content_image : 1, style_image : 1},
   function(err, jobs){
     if (err) {next(err, req, res); return;}
@@ -25,6 +27,8 @@ router.get('/jobs', function(req, res, next) {
  *   1. Update job to complete in DB
  *   2. Send email with link to file to person or maybe attach image?
  */
+
+var BASE_BUCKET_PATH = 'neural-style.s3-website-us-east-1.amazonaws.com/';
 router.post('/job/complete', function(req, res, next){
   var id = req.body.id;
   var final_image = req.body.final_image;
@@ -35,15 +39,20 @@ router.post('/job/complete', function(req, res, next){
     job.final_image = final_image;
     job.save(function(err){
       if(err){next(err, req, res); return;}
-      res.send(job);        
+      var url = BASE_BUCKET_PATH + job.final_image;
+      sendEmail({
+        to: job.email,
+        url: url
+      }).then(function(){res.sendstatus(200);},
+              function(){res.sendstatus(500);});
     });
   });
 });
 
 /* GET completed jobs to view */
 router.get('/jobs/complete', function(req, res, next){
-  Job.find({isPublic : true, job_complete : true}, 
-           {content_image : 1, style_image : 1, 
+  Job.find({isPublic : true, job_complete : true},
+           {content_image : 1, style_image : 1,
             final_image : 1, date_completed : 1},
   function(err, jobs){
     if(err) {next(err, req, res); return;}
@@ -59,15 +68,15 @@ router.get('/jobs/complete', function(req, res, next){
  *   - add urls to db
  */
 var uploadImgs = upload.fields([
-  {name: 'content_image', maxCount: 1}, 
-  {name: 'style_image', maxCount: 1} 
+  {name: 'content_image', maxCount: 1},
+  {name: 'style_image', maxCount: 1}
 ]);
 router.post('/job', uploadImgs, function(req, res, next) {
   Q.all([
     processImage(req.files.content_image[0]),
     processImage(req.files.style_image[0]),
   ])
-  .then(function(paths){  
+  .then(function(paths){
     var data = req.body;
     var email = data.email;
     var content_img = paths[0]; //key in s3 bucket
@@ -165,6 +174,26 @@ function resizeImage(path){
     } else {
       deferred.resolve(path);
     }
+  });
+  return deferred.promise;
+}
+
+function sendEmail(params){
+  var deferred = Q.defer();
+  var to = params.to;
+  var from = params.from || "artwork@neural-style.com";
+  var subject = params.subject || 'Your Image is Ready!';
+  var baseMessage = '<p>Hi there!</p><p>Exciting news: your image is ready to view and download. Please travel to <a href="{url}">this page</a> to view your image!</p><br/><p>Thanks,</p><p>The Neural Image Team</p>';
+  sendgrid.send({
+    to: to,
+    from: from,
+    subject: subject,
+    html: baseMessage.replace("{url}", params.url)
+  }, function(err, json){
+    if (err) {
+      deferred.reject(err);
+    }
+    deferred.resolve(json);
   });
   return deferred.promise;
 }
