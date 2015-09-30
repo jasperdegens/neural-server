@@ -6,8 +6,9 @@ var gulp = require('gulp'),
   concat = require('gulp-concat');
 
 gulp.task('sass', function(done){
-  gulp.src('./sass/*.scss')
+  gulp.src('./sass/*')
       .pipe(sass().on('error', sass.logError))
+      .pipe(concat('style.css'))
       .pipe(gulp.dest('./public/stylesheets'));
 });
 

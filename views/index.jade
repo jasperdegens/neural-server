@@ -34,5 +34,11 @@ block content
           .uk-form-controls: input(type="checkbox", name="isPublic", checked)
        button.uk-button.uk-button-primary Submit
 
-  
-  // p Running the processing server can take a while and is quite expensive (I'm not made of money guys), so it is scheduled to run once every night. You will receive an email with a link to your photo when the image has been processed.
+  .uk-modal(data-uk-modal="{center:true}")
+    .uk-modal-dialog
+      h1.modal-title Sending data...
+      h3 Please wait while your images upload.
+      .uk-progress.uk-progress-striped
+        .uk-progress-bar(style="width:0%") 0%
+      .uk-panel.uk-panel-box.uk-panel-box-primary
+        p #[strong Note:] Running the processing server can take a while and is quite expensive (I'm not made of money guys), so it is scheduled to run once every night. You will receive an email with a link to your photo when the image has been processed.

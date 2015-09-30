@@ -1,3 +1,7 @@
+var modal = UIkit.modal('.uk-modal');
+var $progressBar = $('.uk-progress-bar');
+
+
 $(document).ready(function() {
   // fileDropInit();
   
@@ -8,6 +12,9 @@ $(document).ready(function() {
 
   //ajax form submit
   $('form').on('submit', function(e){
+    // show modal
+    modal.show();
+
     e.preventDefault();
     $form = $(e.target);
     var url = $form.attr('action');
@@ -36,6 +43,7 @@ $(document).ready(function() {
             return myXhr;
         },
         success: uploadComplete,
+        error: uploadFail,
         data: formData,
         //Options to tell jQuery not to process data or worry about content-type.
         cache: false,
@@ -46,12 +54,39 @@ $(document).ready(function() {
 });
 
 function uploadProgress(e){
-  console.log(e.loaded + ' and ' + e.total);
+  var percent = Math.floor((e.loaded * 100) / e.total) + '%';
+  if (percent === '100%') { percent = '99%';}
+  $progressBar.css('width', percent).html(percent);
+}
+
+function uploadFail(){
+  $progressBar.parent().addClass('uk-progress-danger');
+  $('.modal-title').fadeOut(1000, function(){
+    $(this).text('Something went wrong...').fadeIn(1000);
+  });
+  setTimeout(function(){
+    modal.hide();
+    redirect('/');
+  }, 5000);
 }
 
 function uploadComplete(){
-  console.log('somehow...');
+  $progressBar.css('width', '100%').html('100%');
+  $progressBar.parent().addClass('uk-progress-success');
+  $('.uk-modal-dialog h3').fadeOut(1000);
+  $('.modal-title').fadeOut(1000, function(){
+    $(this).text('Success!').fadeIn(1000);
+  });
+  setTimeout(function(){
+    modal.hide();
+    redirect('/');
+  }, 5000);
 }
+
+function redirect(path){
+  setTimeout(function(){window.location.replace(path);}, 200);
+}
+
 
 function readURL(input) {
   console.log(input);
