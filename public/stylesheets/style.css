@@ -25,15 +25,27 @@ footer {
   color: #FFF;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 40px; }
+  justify-content: center; }
 
 footer * a {
   color: #8CC14C; }
 
+.content {
+  background-color: #3E606F;
+  min-height: 100%;
+  margin-bottom: -115px; }
+
+/* for footer display */
+.content:after {
+  content: "";
+  display: block; }
+
+footer, .content:after {
+  height: 115px; }
+
 /****** GLOBAL STYLES *****/
 html, body {
-  /*height: 100%;*/
+  height: 100%;
   width: 100%; }
 
 body, h1, h2, h3, h4, h5, h6, p, a {
@@ -42,26 +54,6 @@ body, h1, h2, h3, h4, h5, h6, p, a {
 .uk-container {
   max-width: 950px; }
 
-.content {
-  background-color: #3E606F; }
-
-/* try to utilize flexbox for spacing 
-body{
-  display: flex;
-  flex-flow: column;
-}
-
-header{
-  flex: 0 1 auto;
-}
-
-.content{
-  flex: 1 1 auto;
-}
-
-footer{
-  flex: 0 1 auto;
-}*/
 .relative {
   position: relative; }
 
