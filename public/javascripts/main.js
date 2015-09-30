@@ -1,1 +1,47 @@
-function Init(){var e=document.getElementsByClassName("filedrag"),r=new XMLHttpRequest;if(r.upload)for(var a=0;a<e.length;a++)filedrag[a].addEventListener("dragover",FileDragHover,!1),filedrag[a].addEventListener("dragleave",FileDragHover,!1),filedrag[a].addEventListener("drop",FileSelectHandler,!1)}function FileDragHover(e){e.stopPropagation(),e.preventDefault(),e.target.className="dragover"==e.type?"hover":""}function FileSelectHandler(e){FileDragHover(e)}window.File&&window.FileList&&window.FileReader&&Init();
+$(document).ready(function() {
+  fileDropInit();
+});
+
+
+//
+// initialize
+function fileDropInit() {
+
+  var filedrags = $('.drop-area');
+  console.log(filedrags);
+
+  
+  for (var i = 0; i < filedrags.length; i++) {
+  // add handlers to all filedrops
+    filedrags[i].addEventListener("dragover", FileDragHover, false);
+    filedrags[i].addEventListener("dragleave", FileDragHover, false);
+    filedrags[i].addEventListener("drop", FileSelectHandler, false);
+  }
+}
+
+// file drag hover
+function FileDragHover(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  e.target.className = (e.type == "dragover" ? "hover" : "");
+}
+
+// file selection
+function FileSelectHandler(e) {
+
+  // cancel event and hover styling
+  FileDragHover(e);
+  console.log(e);
+  $(e.target).find("input").prop("file", e.dataTransfer.files[0]);
+  e.preventDefault();
+
+
+  // // fetch FileList object
+  // var files = e.target.files || e.dataTransfer.files;
+
+  // // process all File objects
+  // for (var i = 0, f; f = files[i]; i++) {
+  //   ParseFile(f);
+  // }
+
+}

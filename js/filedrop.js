@@ -1,26 +1,21 @@
+$(document).ready(function() {
+  fileDropInit();
+});
 
-// call initialization file
-if (window.File && window.FileList && window.FileReader) {
-  Init();
-}
 
 //
 // initialize
-function Init() {
+function fileDropInit() {
 
-  var filedrags = document.getElementsByClassName('filedrag');
+  var filedrags = $('.drop-area');
+  console.log(filedrags);
 
-
-  // is XHR2 available?
-  var xhr = new XMLHttpRequest();
-  if (xhr.upload) {
   
-    for (var i = 0; i < filedrags.length; i++) {
-    // add handlers to all filedrops
-      filedrag[i].addEventListener("dragover", FileDragHover, false);
-      filedrag[i].addEventListener("dragleave", FileDragHover, false);
-      filedrag[i].addEventListener("drop", FileSelectHandler, false);
-    }
+  for (var i = 0; i < filedrags.length; i++) {
+  // add handlers to all filedrops
+    filedrags[i].addEventListener("dragover", FileDragHover, false);
+    filedrags[i].addEventListener("dragleave", FileDragHover, false);
+    filedrags[i].addEventListener("drop", FileSelectHandler, false);
   }
 }
 
@@ -36,6 +31,10 @@ function FileSelectHandler(e) {
 
   // cancel event and hover styling
   FileDragHover(e);
+  console.log(e);
+  $(e.target).find("input").prop("file", e.dataTransfer.files[0]);
+  e.preventDefault();
+
 
   // // fetch FileList object
   // var files = e.target.files || e.dataTransfer.files;
