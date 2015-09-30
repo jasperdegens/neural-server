@@ -1,9 +1,57 @@
 $(document).ready(function() {
   // fileDropInit();
+  
+  //populate preview of uploaded images
   $('.drop-area').find('input').change(function(e){
     readURL(e.target);
   });
+
+  //ajax form submit
+  $('form').on('submit', function(e){
+    e.preventDefault();
+    $form = $(e.target);
+    var url = $form.attr('action');
+    // var data = $form.serialize();
+    var formData = new FormData();
+
+    $form.find(':input').not('button').each(function(){
+      //check if file 
+      console.log(this);
+      var $elem = $(this);
+      if ($elem.attr('type') === 'file') {
+        var file = $('[name='+$elem.attr('name'))[0].files[0];
+        formData.append($elem.attr('name'), file);
+      } else {
+        formData.append($elem.attr('name'), $elem.val());
+      }
+    });
+    $.ajax({
+        url: url,
+        type: 'POST',
+        xhr: function() {  // Custom XMLHttpRequest
+            var myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){ // Check if upload property exists
+                myXhr.upload.addEventListener('progress',uploadProgress, false);
+            }
+            return myXhr;
+        },
+        success: uploadComplete,
+        data: formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+  });
 });
+
+function uploadProgress(e){
+  console.log(e.loaded + ' and ' + e.total);
+}
+
+function uploadComplete(){
+  console.log('somehow...');
+}
 
 function readURL(input) {
   console.log(input);
@@ -20,6 +68,8 @@ function readURL(input) {
     reader.readAsDataURL(input.files[0]);
   }
 }
+
+
 
 
 //
