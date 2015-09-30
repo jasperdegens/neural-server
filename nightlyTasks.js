@@ -11,7 +11,7 @@ var aws = require('aws-sdk');
 aws.config.update({region:'us-east-1'});
 
 // job fires every day except wednesday
-var cronJob = new CronJob('00 00 5 * * *', function(){
+var cronJob = new CronJob('00 00 5 * * 0,3,5', function(){
   checkJobs(function(enoughJobs){
     if (enoughJobs) {
       startImgProcessor();

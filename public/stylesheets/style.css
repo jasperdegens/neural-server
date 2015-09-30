@@ -19,34 +19,49 @@ header {
   background-color: transparent;
   border: none; }
 
+/****** FOOTER STYLES ****/
+footer {
+  background-color: #3E606F;
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px; }
+
+footer * a {
+  color: #8CC14C; }
+
+/****** GLOBAL STYLES *****/
+html, body {
+  /*height: 100%;*/
+  width: 100%; }
+
+body, h1, h2, h3, h4, h5, h6, p, a {
+  font-family: 'Hind Vadodara', sans-serif; }
+
 .uk-container {
   max-width: 950px; }
 
 .content {
   background-color: #3E606F; }
 
-/****** GLOBAL STYLES *****/
-html, body {
-  height: 100%;
-  width: 100%; }
-
-body, h1, h2, h3, h4, h5, h6, p, a {
-  font-family: 'Hind Vadodara', sans-serif; }
-
-/* try to utilize flexbox for spacing */
-body {
+/* try to utilize flexbox for spacing 
+body{
   display: flex;
-  flex-flow: column; }
+  flex-flow: column;
+}
 
-header {
-  flex: 0 1 auto; }
+header{
+  flex: 0 1 auto;
+}
 
-.content {
-  flex: 1 1 auto; }
+.content{
+  flex: 1 1 auto;
+}
 
-footer {
-  flex: 0 1 auto; }
-
+footer{
+  flex: 0 1 auto;
+}*/
 .relative {
   position: relative; }
 
@@ -75,6 +90,12 @@ footer {
   line-height: 23px;
   margin-top: 0px; }
 
+.padding-bottom {
+  padding-bottom: 40px; }
+
+.align-right {
+  margin-left: auto; }
+
 /******* FORM STYLES ******/
 .drop-area {
   background-color: #FFF;
@@ -83,14 +104,37 @@ footer {
   -ms-border-radius: 5px;
   border-radius: 5px;
   border: 2px solid #AAA;
-  max-width: 250px;
+  max-width: 230px;
+  min-height: 140px;
   padding: 36px;
-  margin: 0 auto; }
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover !important;
+  background-position: center;
+  opacity: 0;
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease; }
+
+.preview.active {
+  opacity: 1;
+  z-index: 99; }
 
 .file-input {
   position: relative;
   overflow: hidden;
-  margin: 10px;
   display: inline-block; }
 
 .file-input input {
@@ -99,6 +143,7 @@ footer {
   right: 0;
   bottom: 0;
   left: 0;
+  width: 100%;
   padding: 0;
   margin: 0;
   cursor: pointer;
@@ -114,3 +159,10 @@ footer {
   text-align: left;
   margin-left: auto;
   margin-right: auto; }
+
+.uk-form-label {
+  text-align: right;
+  width: 180px !important; }
+
+input[type=checkbox] {
+  margin-top: 9px !important; }

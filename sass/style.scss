@@ -2,6 +2,7 @@ $color-main : #3E606F;
 $color-light : #AAA;
 $color-white: #FFF;
 $color-dark : #193441; 
+$color-green: #8CC14C;
 $text : #444;
 $text-light: #AAA;
 
@@ -10,6 +11,14 @@ $text-light: #AAA;
     -moz-border-radius: $radius;
      -ms-border-radius: $radius;
          border-radius: $radius;
+}
+
+@mixin transition($length){
+  -webkit-transition: all $length ease;
+     -moz-transition: all $length ease;
+      -ms-transition: all $length ease;
+       -o-transition: all $length ease;
+          transition: all $length ease;
 }
 
 @mixin center-margin(){
@@ -43,6 +52,32 @@ header{
   border: none;
 }
 
+/****** FOOTER STYLES ****/
+footer{
+  background-color: $color-main;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+footer * a{
+  color: $color-green;
+}
+
+
+/****** GLOBAL STYLES *****/
+
+html, body{
+  /*height: 100%;*/
+  width: 100%;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, a{
+  font-family: 'Hind Vadodara', sans-serif;
+}
+
 .uk-container{
   max-width: 950px;
 }
@@ -51,18 +86,7 @@ header{
   background-color: $color-main;
 }
 
-/****** GLOBAL STYLES *****/
-
-html, body{
-  height: 100%;
-  width: 100%;
-}
-
-body, h1, h2, h3, h4, h5, h6, p, a{
-  font-family: 'Hind Vadodara', sans-serif;
-}
-
-/* try to utilize flexbox for spacing */
+/* try to utilize flexbox for spacing 
 body{
   display: flex;
   flex-flow: column;
@@ -78,7 +102,7 @@ header{
 
 footer{
   flex: 0 1 auto;
-}
+}*/
 
 
 .relative{
@@ -117,6 +141,13 @@ footer{
   margin-top: 0px;
 }
 
+.padding-bottom{
+  padding-bottom: 40px;
+}
+
+.align-right{
+  margin-left: auto;
+}
 
 
 /******* FORM STYLES ******/
@@ -125,15 +156,37 @@ footer{
   background-color: $color-white;
   @include border-radius(5px);
   border: 2px solid $color-light;
-  max-width: 250px;
+  max-width: 230px;
+  min-height: 140px;
   padding: 36px;
-  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.preview{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover !important;
+  background-position: center;
+  opacity: 0;
+  @include transition(1s);
+}
+
+.preview.active{
+  opacity: 1;
+  z-index: 99;
 }
 
 .file-input{
   position: relative;
   overflow: hidden;
-  margin: 10px;
   display: inline-block;
 }
 
@@ -143,6 +196,7 @@ footer{
   right: 0;
   bottom: 0;
   left: 0;
+  width: 100%;
   padding: 0;
   margin: 0;
   cursor: pointer;
@@ -159,4 +213,13 @@ footer{
   max-width: 400px;
   text-align: left;
   @include center-margin();
+}
+
+.uk-form-label{
+  text-align: right;
+  width: 180px !important;
+}
+
+input[type=checkbox]{
+  margin-top: 9px !important;
 }

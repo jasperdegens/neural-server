@@ -1,6 +1,25 @@
 $(document).ready(function() {
-  fileDropInit();
+  // fileDropInit();
+  $('.drop-area').find('input').change(function(e){
+    readURL(e.target);
+  });
 });
+
+function readURL(input) {
+  console.log(input);
+  var name = $(input).attr('name');
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      $('#'+name).css('background', 'url('+e.target.result+')')
+                 .addClass('active');
+      console.log(e.target);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
 
 
 //
