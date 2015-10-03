@@ -1,7 +1,10 @@
 extends layout
 
 mixin cloudImageCover(image)
-  .img-cover(style='background:url("http://neural-style.s3-website-us-east-1.amazonaws.com/#{image}")')
+  .slide(style='background:url("http://neural-style.s3-website-us-east-1.amazonaws.com/#{image}")')
+
+mixin cloudImageLazyLoad(image)
+  .slide(data-src="http://neural-style.s3-website-us-east-1.amazonaws.com/#{image}")
 
 block content
   .uk-container.uk-container-center.center.container-white
@@ -11,6 +14,6 @@ block content
     .uk-flex-middle.uk-flex.uk-flex-wrap.uk-flex-space-around
       each job, index in jobs
         .img-slideshow
-          +cloudImageCover(job.final_image) 
-          //- +cloudImage(job.content_image)
-          //- +cloudImage(job.style_image)
+          +cloudImageLazyLoad(job.content_image)
+          +cloudImageLazyLoad(job.style_image)
+          +cloudImageCover(job.final_image)
