@@ -1,14 +1,16 @@
 extends layout
 
-mixin cloudImage(image)
-  a(href="http://neural-style.s3-website-us-east-1.amazonaws.com/#{image}")
-    p #{image}
+mixin cloudImageCover(image)
+  .img-cover(style='background:url("http://neural-style.s3-website-us-east-1.amazonaws.com/#{image}")')
 
 block content
-  each job, index in jobs
-    p Content Image
-    +cloudImage(job.content_image)
-    p Style Image
-    +cloudImage(job.style_image)
-    p Final Image
-    +cloudImage(job.final_image) 
+  .uk-container.uk-container-center.center.container-white
+    .intro
+      h1 Happy Viewing
+      p Here are some examples of stylised images. Hover over the pictures to view original and style photos.
+    .uk-flex-middle.uk-flex.uk-flex-wrap.uk-flex-space-around
+      each job, index in jobs
+        .img-slideshow
+          +cloudImageCover(job.final_image) 
+          //- +cloudImage(job.content_image)
+          //- +cloudImage(job.style_image)

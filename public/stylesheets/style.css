@@ -217,3 +217,21 @@ body, h1, h2, h3, h4, h5, h6, p, a {
 
 input[type=checkbox] {
   margin-top: 9px !important; }
+
+/******* EXAMPLES PAGE ******/
+.img-slideshow {
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  position: relative;
+  margin-bottom: 57px; }
+
+.img-cover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-size: cover !important;
+  background-position: center; }

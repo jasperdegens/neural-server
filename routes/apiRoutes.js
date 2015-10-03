@@ -49,16 +49,6 @@ router.post('/job/complete', function(req, res, next){
   });
 });
 
-/* GET completed jobs to view */
-router.get('/jobs/complete', function(req, res, next){
-  Job.find({isPublic : true, job_complete : true},
-           {content_image : 1, style_image : 1,
-            final_image : 1, date_completed : 1},
-  function(err, jobs){
-    if(err) {next(err, req, res); return;}
-    res.render('jobs', {jobs: jobs});
-  });
-});
 
 /* POST -- create job 
  * tasks:
