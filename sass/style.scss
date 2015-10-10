@@ -5,6 +5,7 @@ $color-dark : #193441;
 $color-green: #8CC14C;
 $text : #444;
 $text-light: #AAA;
+$color-blue: #00a8e6;
 
 @mixin border-radius($radius){
  -webkit-border-radius: $radius;
@@ -58,31 +59,38 @@ header{
 
 /****** FOOTER STYLES ****/
 footer{
-  background-color: $color-main;
+  /*background-color: $color-main;*/
   color: $color-white;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 footer * a{
-  color: $color-green;
+  color: $color-blue;
+  padding-top: 4px;
+}
+
+footer * p{
+  margin: 10px;
 }
 
 
 .content{
-  background-color: $color-main;
-  min-height: 100%;
-  margin-bottom: -115px;
+  /*background-color: $color-main;*/
+  height: 100%;
 }
 
 /* for footer display */
 .content:after {
-  content: "";
-  display: block;
+  /*content: "";*/
+  /*display: block;*/
 }
 footer, .content:after {
-  height: 115px; 
+  /*height: 115px; */
 }
 
 
@@ -110,6 +118,9 @@ body, h1, h2, h3, h4, h5, h6, p, a{
   background-color: $color-white;
 }
 
+.main-color{
+  background-color: $color-main;
+}
 
 .text-white{
   color: $color-white;
@@ -122,8 +133,9 @@ body, h1, h2, h3, h4, h5, h6, p, a{
 .intro{
   padding: 30px 50px;
   display: inline-block;
-  max-width: 600px;
+  max-width: 500px;
   text-align: left;
+  border-radius: 2px;
 }
 
 .intro h1{
@@ -139,13 +151,53 @@ body, h1, h2, h3, h4, h5, h6, p, a{
 }
 
 .padding-bottom{
-  padding-bottom: 40px;
+  padding-bottom: 60px;
 }
 
 .align-right{
   margin-left: auto;
 }
 
+/******* MAIN PAGE STYLES ****/
+.overlays{
+  z-index: -1;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover !important;
+}
+
+#original_image{
+  background: url('/images/oslo.png');
+}
+
+#stylised_image{
+  background: url('/images/oslo_munch.png');
+}
+
+#stylised_image_2{
+ background: url('/images/oslo_stylised.png'); 
+}
+
+.transparent{
+  background-color: rgba(255, 255, 255, .5);
+}
+
+.splash-message{
+  margin-top: -20%;
+}
+
+.main-button{
+  width: 150px;
+  margin: 0 auto;
+  display: block;
+}
 
 /******* FORM STYLES ******/
 
@@ -215,10 +267,16 @@ body, h1, h2, h3, h4, h5, h6, p, a{
 .uk-form-label{
   text-align: right;
   width: 180px !important;
+  margin-top: 5px;
+  float: left;
 }
 
 input[type=checkbox]{
   margin-top: 9px !important;
+}
+
+.uk-form-controls{
+  margin-left: 215px !important;
 }
 
 /******* EXAMPLES PAGE ******/

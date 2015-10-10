@@ -5,7 +5,7 @@ var Job = require('../models/Job');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('full_image', { title: 'Neural Painter' });
 });
 
 
@@ -26,9 +26,12 @@ router.get('/examples', function(req, res, next){
   });
 });
 
-router.get('/sers', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/upload', function(req, res, next) {
+  res.render('index', { title: 'Neural Painter' });
 });
 
+router.get('/redesign', function(req, res, next){
+  res.render('full_image', {title: 'Neural Painter'});
+});
 
 module.exports = router;

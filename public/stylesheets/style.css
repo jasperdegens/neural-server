@@ -83,27 +83,33 @@ header {
 
 /****** FOOTER STYLES ****/
 footer {
-  background-color: #3E606F;
+  /*background-color: $color-main;*/
   color: #FFF;
   display: flex;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%; }
 
 footer * a {
-  color: #8CC14C; }
+  color: #00a8e6;
+  padding-top: 4px; }
+
+footer * p {
+  margin: 10px; }
 
 .content {
-  background-color: #3E606F;
-  min-height: 100%;
-  margin-bottom: -115px; }
+  /*background-color: $color-main;*/
+  height: 100%; }
 
 /* for footer display */
 .content:after {
-  content: "";
-  display: block; }
+  /*content: "";*/
+  /*display: block;*/ }
 
 footer, .content:after {
-  height: 115px; }
+  /*height: 115px; */ }
 
 /****** GLOBAL STYLES *****/
 html, body {
@@ -122,6 +128,9 @@ body, h1, h2, h3, h4, h5, h6, p, a {
 .container-white {
   background-color: #FFF; }
 
+.main-color {
+  background-color: #3E606F; }
+
 .text-white {
   color: #FFF; }
 
@@ -131,8 +140,9 @@ body, h1, h2, h3, h4, h5, h6, p, a {
 .intro {
   padding: 30px 50px;
   display: inline-block;
-  max-width: 600px;
-  text-align: left; }
+  max-width: 500px;
+  text-align: left;
+  border-radius: 2px; }
 
 .intro h1 {
   font-weight: 700;
@@ -145,10 +155,43 @@ body, h1, h2, h3, h4, h5, h6, p, a {
   margin-top: 0px; }
 
 .padding-bottom {
-  padding-bottom: 40px; }
+  padding-bottom: 60px; }
 
 .align-right {
   margin-left: auto; }
+
+/******* MAIN PAGE STYLES ****/
+.overlays {
+  z-index: -1;
+  position: fixed;
+  width: 100%;
+  height: 100%; }
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover !important; }
+
+#original_image {
+  background: url("/images/oslo.png"); }
+
+#stylised_image {
+  background: url("/images/oslo_munch.png"); }
+
+#stylised_image_2 {
+  background: url("/images/oslo_stylised.png"); }
+
+.transparent {
+  background-color: rgba(255, 255, 255, 0.5); }
+
+.splash-message {
+  margin-top: -20%; }
+
+.main-button {
+  width: 150px;
+  margin: 0 auto;
+  display: block; }
 
 /******* FORM STYLES ******/
 .drop-area {
@@ -216,10 +259,15 @@ body, h1, h2, h3, h4, h5, h6, p, a {
 
 .uk-form-label {
   text-align: right;
-  width: 180px !important; }
+  width: 180px !important;
+  margin-top: 5px;
+  float: left; }
 
 input[type=checkbox] {
   margin-top: 9px !important; }
+
+.uk-form-controls {
+  margin-left: 215px !important; }
 
 /******* EXAMPLES PAGE ******/
 .img-slideshow {

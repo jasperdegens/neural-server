@@ -6,8 +6,8 @@ html
     //link(rel='stylesheet', href='/stylesheets/uikit.min.css')
     link(href='https://fonts.googleapis.com/css?family=Hind+Vadodara:300,700,500', rel='stylesheet', type='text/css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    header
+  body.main-color
+    header.container-white
       .uk-container.uk-container-center
         .uk-grid
           a.title.uk-width-medium-1-2.uk-width-small-1-1(href="/")
@@ -17,11 +17,11 @@ html
              nav.uk-navbar
                 .uk-navbar-flip
                   ul.uk-navbar-nav
-                    li: a(href="/examples") Examples
-    .content
+                    //- li: a(href="/examples") Examples
+    .content.main-color
       block content
 
-    footer
+    footer.main-color
       .uk-container.uk-container-center
         .uk-width-1-1
           p Contact <a href="mailto:jasperdegens@gmail.com">Jasper Degens</a> with any questions

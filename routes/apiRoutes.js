@@ -43,8 +43,8 @@ router.post('/job/complete', function(req, res, next){
       sendEmail({
         to: job.email,
         url: url
-      }).then(function(){res.sendstatus(200);},
-              function(){res.sendstatus(500);});
+      }).then(function(){res.sendStatus(200);},
+              function(){res.sendStatus(500);});
     });
   });
 });
