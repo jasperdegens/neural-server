@@ -15,8 +15,8 @@
   height: 100%;
   background: #00a8e6;
   float: left;
-  -webkit-transition: width 0.6s ease;
-  transition: width 0.6s ease;
+  -webkit-transition: width .6s ease;
+  transition: width .6s ease;
   font-size: 12px;
   color: #fff;
   text-align: center; }
@@ -116,11 +116,18 @@ html, body {
   height: 100%;
   width: 100%; }
 
+body {
+  margin: 0;
+  min-height: 100%; }
+
 body, h1, h2, h3, h4, h5, h6, p, a {
   font-family: 'Hind Vadodara', sans-serif; }
 
 .uk-container {
   max-width: 950px; }
+
+.absolute {
+  position: absolute; }
 
 .relative {
   position: relative; }

@@ -11,6 +11,8 @@ var Q = require('q');
 var config = require('../config');
 var sendgrid = require('sendgrid')(config.sendgrid);
 
+var imgProcessor = require('./imgProcessor');
+
 
 /* GET current jobs. */
 router.get('/jobs', function(req, res, next) {
@@ -56,6 +58,7 @@ router.post('/job/complete', function(req, res, next){
  *   - check to make sure less than 500x500px, resize if necessary
  *   - upload to s3
  *   - add urls to db
+ *   - check if should turn on img-processor
  */
 var uploadImgs = upload.fields([
   {name: 'content_image', maxCount: 1},
@@ -79,12 +82,15 @@ router.post('/job', uploadImgs, function(req, res, next) {
     });
     job.save(function(err, obj){
       if (err) {next(err, req, res); return; }
+      // activate img processor if necessary
+      imgProcessor.checkRun();
+
       res.send(obj);
     });
   })
   .then(null, function(error){
     console.log(error);
-    res.sendstatus(500);
+    res.sendStatus(500);
   });
 });
 
