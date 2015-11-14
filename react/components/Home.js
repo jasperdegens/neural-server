@@ -8,6 +8,19 @@ var React = require('react'),
     {Tabs, Tab} = require('material-ui/lib/tabs');
 
 
+var examplesData = [
+  {
+    content_image: '/images/oslo.png',
+    style_image: 'http://artcritical.com/fyfe/images/The_Yellow_Log_m.jpg',
+    final_image: '/images/oslo_stylised.png'
+  },
+  {
+    content_image: '/images/buddist.jpg',
+    style_image: '/images/Mandan.jpg',
+    final_image: '/images/buddist_stylised.png'
+  }
+];
+
 var HomePage = React.createClass({
 
   getInitialState : function(){
@@ -29,7 +42,6 @@ var HomePage = React.createClass({
   render : function(){
 
     var isExamplesTabActive = this.state.currTab === 'examples' ? true : false;
-    console.log(isExamplesTabActive);
 
     var containerStyles = {marginTop: '40px',
                             marginBottom: '40px',
@@ -76,7 +88,6 @@ var HomePage = React.createClass({
 
     var selectedStyle = isExamplesTabActive ? exampleStyles : exampleStyles;
 
-    console.log(this.props.params.tab);
 
     return (
       <FlexSection style={{alignItems: 'initial'}}>
@@ -92,7 +103,7 @@ var HomePage = React.createClass({
               <UploadForm />
             </Tab>
             <Tab label="Examples" value="examples">
-              <Examples />
+              <Examples examples={examplesData}/>
             </Tab>
           </Tabs>
         </div>

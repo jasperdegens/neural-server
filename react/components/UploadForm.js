@@ -19,11 +19,53 @@ class ImgUploadBox extends React.Component {
     var reader = new FileReader();
     var file = e.target.files[0];
     reader.onload = function(upload){
-      self.setState({
-        inputValue : upload.target.result
+      var img = self.resizeImage.call(self, upload.target.result, function(resizedImg){
+        self.setState({
+          inputValue : resizedImg
+        });
       });
     };
     reader.readAsDataURL(file);
+  }
+
+  // creates a dummy canvas element, draws resized image on canvas
+  // and converts back to url
+  // NEEDS a callback
+  resizeImage(imageUrl, callback){
+    var img = new Image();
+    img.src = imageUrl;
+    var self = this;
+
+    img.onload = function(){
+      self.canvas = document.createElement('canvas');
+      self.canvas.style.opacity = 1; // change to 0 to hide
+      self.canvas.style.position = 'fixed';
+      self.canvas.style.left = '-4000px'; //change to off screen
+      document.body.appendChild(self.canvas);
+      var MAX_WIDTH = self.props.maxWidth ? self.props.maxWidth : 600;
+      var MAX_HEIGHT = self.props.maxHeight ? self.props.maxHeight : 600;
+      var width = img.width;
+      var height = img.height;
+       
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+      self.canvas.width = width;
+      self.canvas.height = height;
+      var ctx = self.canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      var resizedImg = self.canvas.toDataURL('image/png');
+      document.body.removeChild(self.canvas);
+      callback(resizedImg);
+    };
   }
 
   handleClick(e){
@@ -232,7 +274,7 @@ class UploadForm extends React.Component {
                 <ImgUploadBox 
                     ref="style_image" 
                     name="style_image" 
-                    description="Upload or choose"
+                    description="Choose or upload"
                     defaultImages={defaultStyleImages} />
               </div>
             </div>

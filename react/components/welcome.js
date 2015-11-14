@@ -28,22 +28,22 @@ class IntroBox extends React.Component{
 
     return (
       <FlexSection>
-        <div style={{background: 'rgba(255, 255, 255, 0.5)', padding: '30px'}}>
+        <div style={{background: 'rgba(255, 255, 255, 0.7)', padding: '30px'}}>
           <h1 style={headerStyle}>Give your photos a bit of style!</h1>
           <p style={styles.paragraphStyle} dangerouslySetInnerHTML={{__html: description}} />
-          <div style={Object.assign({}, styles.flexContainer)}>
-            <Link to="/home/upload">
-              <RaisedButton style={Object.assign({}, styles.flexItem, {marginRight: '30px'})} 
+          <div className="welcomeButtons" style={Object.assign({}, styles.flexContainer)}>
+            <Link to="/home/upload" >
+              <RaisedButton 
+                  className="uploadButton" 
                   secondary={true} 
                   label="Make Your Own!"
-              />
+                  style={Object.assign({}, styles.flexItem)} />
             </Link>
-            <Link to="/home/examples">
+            <Link to="/home/examples" >
               <RaisedButton 
-                  style={Object.assign({}, styles.flexItem, styles.button)} 
                   onClick={this.props.onToggleForm}
                   label="Examples"
-              />
+                  style={Object.assign({}, styles.flexItem, styles.button)} />
             </Link>
           </div>
         </div>

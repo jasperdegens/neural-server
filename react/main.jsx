@@ -52,4 +52,4 @@ const MainApp = React.createClass({
 
 ReactDom.render((
   <MainApp />
-),document.querySelector('#app'));
+),document.getElementById('app'));

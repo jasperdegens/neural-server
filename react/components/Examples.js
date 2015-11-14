@@ -3,34 +3,19 @@ var React = require('react'),
     RaisedButton = require('material-ui/lib/raised-button'),
     ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
-var sampleData = [
-  {
-    content_image: '/images/oslo.png',
-    style_image: 'http://artcritical.com/fyfe/images/The_Yellow_Log_m.jpg',
-    final_image: '/images/oslo_stylised.png'
-  },
-  /*
-  {
-    content_image: '/images/blues.jpg',
-    style_image: '/images/karen.jpg',
-    final_image: '/images/blues_stylised.png'
-  },*/
-
-  {
-    content_image: '/images/buddist.jpg',
-    style_image: '/images/Mandan.jpg',
-    final_image: '/images/buddist_stylised.png'
-  }
-];
 
 var Examples = React.createClass({
 
   getInitialState : function(){
     return {
       currSlide : 0,
-      examples : sampleData, //could be changed later to ajax call
-      numSlides : sampleData.length
+      examples : this.props.examples, //could be changed later to ajax call
+      numSlides : this.props.examples.length
     };
+  },
+
+  propTypes : {
+    examples : React.PropTypes.array
   },
 
   // direction is -1 for left, 1 for right
