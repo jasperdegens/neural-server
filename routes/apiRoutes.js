@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
-var upload = multer({dest : 'tempUploads/'});
 var Job = require('../models/Job');
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3({region: 'us-east-1'});
@@ -10,9 +9,26 @@ var fs = require('fs');
 var Q = require('q');
 var config = require('../config');
 var sendgrid = require('sendgrid')(config.sendgrid);
+var path_helper = require('path');
 
 var imgProcessor = require('./imgProcessor');
 
+var storage = multer.diskStorage({
+  destination: function(req, file, cb){
+    cb(null, 'tempUploads/');
+  },
+  filename: function(req, file, cb){
+    var fileType = file.mimetype.match(/[^\/][\w]*$/g)[0];
+    cb(null, Date.now() + '.' + fileType);
+  }
+});
+
+var upload = multer({
+  storage : storage
+});
+
+// max dimension for picture upload
+var MAX_SIZE = 600;
 
 /* GET current jobs. */
 router.get('/jobs', function(req, res, next) {
@@ -24,12 +40,12 @@ router.get('/jobs', function(req, res, next) {
   });
 });
 
+
 /* POST job complete 
  * Steps:
  *   1. Update job to complete in DB
  *   2. Send email with link to file to person or maybe attach image?
  */
-
 var BASE_BUCKET_PATH = 'neural-style.s3-website-us-east-1.amazonaws.com/';
 router.post('/job/complete', function(req, res, next){
   var id = req.body.id;
@@ -54,10 +70,10 @@ router.post('/job/complete', function(req, res, next){
 
 /* POST -- create job 
  * tasks:
- *   - upload images
- *   - check to make sure less than 500x500px, resize if necessary
+ *   - retrieve uploaded images
+ *   - resize image if necessary -- should be resized on client, but fallback for future api
  *   - upload to s3
- *   - add urls to db
+ *   - enter job into db
  *   - check if should turn on img-processor
  */
 var uploadImgs = upload.fields([
@@ -65,25 +81,41 @@ var uploadImgs = upload.fields([
   {name: 'style_image', maxCount: 1}
 ]);
 router.post('/job', uploadImgs, function(req, res, next) {
-  Q.all([
-    processImage(req.files.content_image[0]),
-    processImage(req.files.style_image[0]),
-  ])
+
+  // do not do anything for dev purposes
+  res.sendStatus(500);
+  return;
+
+
+  var filesToProcess = [];
+  filesToProcess.push(processImage(req.files.content_image[0]));
+  
+  // style image can be either link or file:
+  // check if style_image exists in req.body -- 
+  //   if it does not, we know we uploaded a file, otherwise, it is already in bucket
+  if(!req.body.style_image && req.files.style_image){
+    console.log('file for style');
+    filesToProcess.push(processImage(req.files.style_image[0]));
+  }
+
+  Q.all(filesToProcess)
   .then(function(paths){
+    console.log('made it past all file stuff');
     var data = req.body;
-    var email = data.email;
     var content_img = paths[0]; //key in s3 bucket
-    var style_img = paths[1];  // key in s3 bucket
+    var style_img = req.body.style_image ? path_helper.basename(req.body.style_image) : paths[1];  // key in s3 bucket
+    
+    // create entry to store in db
     var job = new Job({
-      email: email,
+      email: data.email,
       content_image : content_img,
       style_image : style_img,
       isPublic : data.isPublic
     });
     job.save(function(err, obj){
       if (err) {next(err, req, res); return; }
-      // activate img processor if necessary
-      imgProcessor.checkRun();
+      // activate img processor if emought jobs submitted
+      // imgProcessor.checkRun();
 
       res.send(obj);
     });
@@ -102,8 +134,8 @@ router.post('/job', uploadImgs, function(req, res, next) {
 //   4. Remove photo from this machine
 //   5. Return s3 bucket key for file
 function processImage(file){
-  return uploadImageLocal(file)
-  .then(resizeImage)
+  var path = file.destination + file.filename;
+  return resizeImage(path)
   .then(function(localPath){
     return uploadToS3(localPath)
     .then(function(cloudPath) {
@@ -115,29 +147,17 @@ function processImage(file){
   });
 }
 
-var path_helper = require('path');
 function uploadToS3(path){
   var deferred = Q.defer();
   var stream = fs.createReadStream(path);
   var key = path_helper.basename(path);
-  var params = {Bucket: BUCKET, 
+  var params = {Bucket: BUCKET,
                 Key: key,
                 Body: stream};
   s3.putObject(params, function(err, data){
     if(err){console.log('bad upad');deferred.reject(err);}
     deferred.resolve(key);
   });
-  return deferred.promise;
-}
-
-// TODO: check if file name already exists
-function uploadImageLocal(file){
-  var deferred = Q.defer();
-  var destPath = file.destination + file.originalname;
-  fs.rename(file.path, destPath, function(err){
-    if(err){deferred.reject(new Error(err));}
-    deferred.resolve(destPath);
-  });  
   return deferred.promise;
 }
 
@@ -156,9 +176,9 @@ function resizeImage(path){
     console.log('img width: ' + width);
     console.log('img height: ' + height);
     var largest = width > height ? width : height;
-    if (largest > 600) {
+    if (largest > MAX_SIZE) {
       // need to resize with scale of 2 digits
-      var scale = Math.floor((600.*100.) / largest) / 100;
+      var scale = Math.floor((MAX_SIZE*100.0) / largest) / 100;
       console.log('scale is: ' + scale);
       
       image.batch()

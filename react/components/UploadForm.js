@@ -2,7 +2,11 @@ var React = require('react'),
     Link = require('react-router').Link,
     Checkbox = require('material-ui/lib/checkbox'),
     RaisedButton = require('material-ui/lib/raised-button'),
+    FlatButton = require('material-ui/lib/flat-button'),
     TextField = require('material-ui/lib/text-field'),
+    Dialog = require('material-ui/lib/dialog'),
+    Paper = require('material-ui/lib/paper'),
+    LinearProgress = require('material-ui/lib/linear-progress'),
     styles = require('../styles');
 
 
@@ -11,7 +15,13 @@ var classname = require('classname');
 class ImgUploadBox extends React.Component {
   constructor(args) {
     super();
-    this.state = { inputValue : null};
+    this.state = { inputValue : null, isDataURI : false};
+  }
+
+  resetState(){
+    this.setState({
+      inputValue : null, isDataURI : false
+    });
   }
 
   handleFile(e) {
@@ -19,58 +29,20 @@ class ImgUploadBox extends React.Component {
     var reader = new FileReader();
     var file = e.target.files[0];
     reader.onload = function(upload){
-      var img = self.resizeImage.call(self, upload.target.result, function(resizedImg){
+      var img = resizeImage.call(self, upload.target.result, function(resizedImg){
         self.setState({
-          inputValue : resizedImg
+          inputValue : resizedImg,
+          isDataURI: true
         });
       });
     };
     reader.readAsDataURL(file);
   }
 
-  // creates a dummy canvas element, draws resized image on canvas
-  // and converts back to url
-  // NEEDS a callback
-  resizeImage(imageUrl, callback){
-    var img = new Image();
-    img.src = imageUrl;
-    var self = this;
-
-    img.onload = function(){
-      self.canvas = document.createElement('canvas');
-      self.canvas.style.opacity = 1; // change to 0 to hide
-      self.canvas.style.position = 'fixed';
-      self.canvas.style.left = '-4000px'; //change to off screen
-      document.body.appendChild(self.canvas);
-      var MAX_WIDTH = self.props.maxWidth ? self.props.maxWidth : 600;
-      var MAX_HEIGHT = self.props.maxHeight ? self.props.maxHeight : 600;
-      var width = img.width;
-      var height = img.height;
-       
-      if (width > height) {
-        if (width > MAX_WIDTH) {
-          height *= MAX_WIDTH / width;
-          width = MAX_WIDTH;
-        }
-      } else {
-        if (height > MAX_HEIGHT) {
-          width *= MAX_HEIGHT / height;
-          height = MAX_HEIGHT;
-        }
-      }
-      self.canvas.width = width;
-      self.canvas.height = height;
-      var ctx = self.canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
-      var resizedImg = self.canvas.toDataURL('image/png');
-      document.body.removeChild(self.canvas);
-      callback(resizedImg);
-    };
-  }
-
   handleClick(e){
     this.setState({
-      inputValue : e.target.src
+      inputValue : e.target.src,
+      isDataURI: false
     });
   }
 
@@ -148,11 +120,122 @@ class ImgUploadBox extends React.Component {
 }
 
 
+class UploadModal extends React.Component {
+  constructor(args){
+    super(args);
+  }
+
+  render() {
+          
+    var uploadStatus = this.props.uploadStatus;
+    console.log(uploadStatus);      
+    var isOpen = (uploadStatus === 'stopped') ? false : true;
+
+    var titleText, 
+        subHeadStyle = {margin: '0 0 7px 0'},
+        subHeadText,
+        paperContent,
+        actions = [];
+
+    var green = '#00e676';
+
+    if(uploadStatus === 'complete'){
+      titleText = 'Success!';
+      subHeadStyle.color = green;
+      subHeadText = 'Your images have uploaded!';
+
+      paperContent = (
+        <p style={Object.assign({}, styles.paragraphStyle, {margin: '0'})}>
+        We have received your request and are working to process your images. 
+        Depending on our job queue, this could take several minutes, or up to a day. 
+        We will send you an email with a link to view and download your new artistic 
+        creation. The email we send may be put into your spam folder.</p>
+      );
+      actions = [
+        <FlatButton 
+            key="upload"
+            secondary={true} 
+            label="Upload Another"
+            onClick={this.props.handleResetForm} />,
+        <FlatButton 
+            key="close"
+            label="Close"
+            onClick={this.props.handleResetForm} />
+      ];
+
+    } else if (uploadStatus === 'uploading') {
+      titleText = 'Uploading Images...';
+      subHeadText = 'Please wait while we process your images.';
+      paperContent = (
+          <p style={Object.assign({}, styles.paragraphStyle, {margin: '0'})}>
+            <span 
+              style={{fontWeight: 'bold', color: '#00bcd4', margin: '0'}}>
+            Note:</span> I am not made of money, and your 
+          image will not be mashed up until there are enough requests. 
+          You will be sent an email when your job is ready</p>
+      );
+      
+    } else {
+      titleText = 'Error';
+      subHeadText = 'Sorry, but there was an error with the upload.'
+      subHeadStyle.color = '#ff5722';
+      paperContent = (
+        <p style={Object.assign({}, styles.paragraphStyle, {margin: '0'})}>
+        We are taking a look to see what the problem is. Please try again.</p>
+      );
+      actions = [
+        <FlatButton 
+            key="close"
+            label="Close"
+            onClick={this.props.handleResetForm} />
+      ];
+    }
+
+
+
+    return (
+      <Dialog
+          title={titleText}
+          open={isOpen}
+          actions={actions}
+          style={{zIndex:'999'}}
+          bodyStyle={{paddingTop: '10px'}}>
+        <h4 style={subHeadStyle}>{subHeadText}</h4>
+        {uploadStatus === 'uploading' ? <LinearProgress
+            mode="determinate"
+            value={this.props.uploadPercent} 
+            style={{height: '20px'}}/>
+        : null }
+        <Paper style={{padding: '7px 10px', marginTop: '15px', background: '#ededed'}}>
+          {paperContent}
+        </Paper>
+
+      </Dialog>
+    );
+  }
+}
+
 
 class UploadForm extends React.Component {
   constructor(args) {
     super();
-    this.state = {uploading : false, uploadPercent : 0};
+    this.state = {uploadStatus : 'stopped', uploadPercent : 0};
+  }
+
+  resetState() {
+    for (var ref in this.refs){
+      if(this.refs[ref].resetState){
+        this.refs[ref].resetState();
+      }
+    }
+    this.setState({
+      uploadStatus : 'stopped',
+      uploadPercent : 0
+    });
+  }
+
+  toggleTab(value){
+    this.props.toggleTabHandler(value);
   }
 
   handleSubmit(e) {
@@ -163,37 +246,68 @@ class UploadForm extends React.Component {
     var images = ['content_image', 'style_image'];
     images.map(key => {
       const val = this.refs[key];
-      formData.append(val.props.name, val.state.inputValue);
+      var inputValue = val.state.inputValue;
+      if (val.state.isDataURI) {
+        inputValue = dataURItoBlob(inputValue);
+      }
+      formData.append(val.props.name, inputValue);
     });
     // add remaining form fields
-    formData.append('email', this.refs['email']);
-    formData.append('isPublic', this.refs['isPublic'].checked);
+    formData.append('email', this.refs['email'].getValue());
+    formData.append('isPublic', this.refs['isPublic'].isChecked());
     this.setState({
-      uploading : true
+      uploadStatus : 'uploading'
     });
-    this.simulateUpload.call(this, 0);
+
+    var r = new XMLHttpRequest();
+    r.open("POST", "/api/job", true);
+    var self = this;
+    r.onreadystatechange = function () {
+      if (r.readyState != 4) return;
+      if (r.status != 200){
+        self.handleUploadError.call(self);
+        return;
+      }
+      self.handleUploadSuccess.call(self);
+    };
+    r.addEventListener('progress', this.handleUploadProgress.bind(this));
+    r.addEventListener('error', this.handleUploadError.bind(this));
+    r.send(formData);
   }
 
 
 
   simulateUpload(percent){
+    this.setState({
+      uploadStatus : 'uploading'
+    });
     if (percent > 1000) {
-      this.setState({uploading: false, uploadPercent: 0});
+      this.setState({uploadStatus: 'complete'});
       return;
     }
     var self = this;
-    console.log(percent);
     self.handleUpload({loaded:percent, total: 1000});
     setTimeout(function(){
-      self.simulateUpload.call(self, percent+10);
+      self.simulateUpload.call(self, percent+100);
     }, 200);
   }
 
   componentDidMount() {
-
   }
 
-  handleUpload(e){
+  handleUploadSuccess(e){
+    this.setState({
+      uploadStatus: 'complete'
+    });
+  }
+
+  handleUploadError(e){
+    this.setState({
+      uploadStatus : 'error'
+    });
+  }
+
+  handleUploadProgress(e){
     var percent = Math.floor((e.loaded * 100) / e.total);
     if (percent >= 100) { percent = 99;}
     this.setState({uploadPercent : percent});
@@ -301,10 +415,76 @@ class UploadForm extends React.Component {
               <RaisedButton label="submit" type="submit" secondary={true}/>
             </div>
           </form>
+          <UploadModal
+              uploadStatus={this.state.uploadStatus}
+              uploadPercent={this.state.uploadPercent} 
+              handleResetForm={this.resetState.bind(this)} />
         </div>
       )
   }
     
 };
+
+// creates a dummy canvas element, draws resized image on canvas
+// and converts back to url
+// NEEDS a callback
+function resizeImage(imageUrl, callback){
+  var img = new Image();
+  img.src = imageUrl;
+  var self = this;
+
+  img.onload = function(){
+    self.canvas = document.createElement('canvas');
+    self.canvas.style.opacity = 1; // change to 0 to hide
+    self.canvas.style.position = 'fixed';
+    self.canvas.style.left = '-4000px'; //change to off screen
+    document.body.appendChild(self.canvas);
+    var MAX_WIDTH = self.props.maxWidth ? self.props.maxWidth : 600;
+    var MAX_HEIGHT = self.props.maxHeight ? self.props.maxHeight : 600;
+    var width = img.width;
+    var height = img.height;
+     
+    if (width > height) {
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+    } else {
+      if (height > MAX_HEIGHT) {
+        width *= MAX_HEIGHT / height;
+        height = MAX_HEIGHT;
+      }
+    }
+    self.canvas.width = width;
+    self.canvas.height = height;
+    var ctx = self.canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+    var resizedImg = self.canvas.toDataURL('image/png');
+    document.body.removeChild(self.canvas);
+    callback(resizedImg);
+  };
+}
+
+// Helper function to convert datauri to blob for for submit
+//   -- from: http://stackoverflow.com/questions/4998908/
+function dataURItoBlob(dataURI) {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURI.split(',')[1]);
+    else
+        byteString = unescape(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], {type:mimeString});
+}
 
 module.exports = UploadForm;

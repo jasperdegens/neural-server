@@ -94,12 +94,12 @@ var HomePage = React.createClass({
         <div style={Object.assign({}, containerStyles)} >
           <h1 style={Object.assign({}, styles.transition, selectedStyle.text, {margin: '0 0 10px 0', fontWeight: '300'})}
             >Neural Painter</h1>
-          <Tabs initialSelectedIndex={this.props.params.tab === 'examples' ? 1 : 0} 
+          <Tabs initialSelectedIndex={this.props.params.tab === 'examples' ? 1 : 0}
                 onChange={this.handleChange}
                 tabItemContainerStyle={selectedStyle.tabItemContainerStyle}
                 inkBarStyle={selectedStyle.inkBarStyle}
                 contentContainerStyle={Object.assign({}, contentContainerStyle, styles.transition)}>
-            <Tab label="Make Your Own" value="form">
+            <Tab label="Make Your Own" value="upload">
               <UploadForm />
             </Tab>
             <Tab label="Examples" value="examples">
