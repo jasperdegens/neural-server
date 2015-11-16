@@ -58,6 +58,7 @@ router.get('/job/:id', function(req, res, next){
  *   2. Send email with link to file to person or maybe attach image?
  */
 var BASE_BUCKET_PATH = 'neural-style.s3-website-us-east-1.amazonaws.com/';
+var BASE_SITE_PATH = 'http://neural-painter.com';
 router.post('/job/complete', function(req, res, next){
   var id = req.body.id;
   var final_image = req.body.final_image;
@@ -68,7 +69,7 @@ router.post('/job/complete', function(req, res, next){
     job.final_image = final_image;
     job.save(function(err){
       if(err){next(err, req, res); return;}
-      var url = BASE_BUCKET_PATH + job.final_image;
+      var url = BASE_SITE_PATH + '/view/' + job.exampleId;
       sendEmail({
         to: job.email,
         url: url

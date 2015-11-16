@@ -79,6 +79,8 @@ var MyPhotoSection = React.createClass({
       content = errorContent;
     }
 
+    var buttonStyle = {marginTop: '10px'};
+
     return (
       <FlexSection>
         <div style={{zIndex : 99, marginTop: '50px'}}>
@@ -86,11 +88,27 @@ var MyPhotoSection = React.createClass({
             >Neural Painter</h1>
           {content}
           <div style={{textAlign: 'center', marginTop: '10px'}}>
+            {this.state.images ? 
+              <form style={{display: 'inline-block'}} 
+                    method="get" 
+                    action={this.state.baseURL + this.state.images.final_image}>
+                <RaisedButton 
+                    style={Object.assign({}, buttonStyle, {marginRight: '20px'})} 
+                    label="Dowload" 
+                    type="submit"
+                    secondary={true} />
+              </form>
+            : null}
             <Link to="/home/upload">
-              <RaisedButton style={{marginRight: '20px'}} label="New Image" />
+              <RaisedButton 
+                  style={Object.assign({}, buttonStyle, {marginRight: '20px'})} 
+                  label="New Image" />
             </Link>
             <Link to='/home/examples'>
-              <RaisedButton secondary={true} label="More Examples" />
+              <RaisedButton 
+                  style={Object.assign({}, buttonStyle)} 
+                  secondary={true} 
+                  label="More Examples" />
             </Link>
           </div>
         </div>
