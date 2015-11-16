@@ -10,6 +10,9 @@ var React = require('react'),
     styles = require('../styles');
 
 
+//TODO: organise ordering of functions
+// clean up code in general
+
 var classname = require('classname');
 
 class ImgUploadBox extends React.Component {
@@ -128,7 +131,6 @@ class UploadModal extends React.Component {
   render() {
           
     var uploadStatus = this.props.uploadStatus;
-    console.log(uploadStatus);      
     var isOpen = (uploadStatus === 'stopped') ? false : true;
 
     var titleText, 

@@ -11,6 +11,28 @@ body, h1, h2, h3, h4, h5, h6, p, a{
   font-family: 'Hind Vadodara', sans-serif;
 }
 
+footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 99;
+}
+
+footer > p{
+  margin: 5px;
+  font-size: 14px;
+  color: white;
+}
+
+footer > p > a{
+  text-decoration: none;
+  color: #00bcd4;
+}
+
+footer > p > a:hover{
+  color: #222;
+}
 
 /***** Background Slideshow CSS ****/
 .slide-leave {

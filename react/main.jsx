@@ -3,6 +3,7 @@ var React = require("react"),
     Welcome = require('./components/welcome'),
     HomePage = require('./components/Home'),
     SlideShow = require('./components/SlideShow'),
+    Footer = require('./components/Footer'),
     injectTapEventPlugin = require("react-tap-event-plugin"),
     darkTheme = require('material-ui/lib/styles/raw-themes/dark-raw-theme'),
     ThemeManager = require('material-ui/lib/styles/theme-manager');
@@ -38,12 +39,13 @@ const MainApp = React.createClass({
         ];
 
         return (
-            <div>
+            <div style={{position: 'relative', minHeight: '100%'}}>
               <SlideShow slides={slides} interval={8}/>
               <Router>
                 <Route path='/' component={Welcome} />
                 <Route path='/home/:tab' component={HomePage} />
               </Router>
+              <Footer />
             </div>
         );
     }

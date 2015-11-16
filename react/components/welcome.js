@@ -34,7 +34,6 @@ class IntroBox extends React.Component{
           <div className="welcomeButtons" style={Object.assign({}, styles.flexContainer)}>
             <Link to="/home/upload" >
               <RaisedButton 
-                  className="uploadButton" 
                   secondary={true} 
                   label="Make Your Own!"
                   style={Object.assign({}, styles.flexItem)} />
@@ -70,7 +69,7 @@ class Welcome extends React.Component {
     
     return (
       <FlexSection style={{position: 'fixed', maxWidth: '100%', width: '100%'}}>
-        <div style={Object.assign({}, styles.flexItem, {maxWidth: '600px', marginTop: '-20%'})}>
+        <div style={Object.assign({}, styles.flexItem, {maxWidth: '600px', marginTop: '-10%'})}>
           <IntroBox onToggleForm={this.handleToggleForm.bind(this)} />
         </div>
       </FlexSection>
