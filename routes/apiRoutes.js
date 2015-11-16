@@ -30,7 +30,9 @@ var upload = multer({
 // max dimension for picture upload
 var MAX_SIZE = 600;
 
-/* GET current jobs. */
+/* GET current jobs.
+    for use by img processing server.
+ */
 router.get('/jobs', function(req, res, next) {
   Job.find({job_complete : false},
            {_id : 1, content_image : 1, style_image : 1},
@@ -40,6 +42,15 @@ router.get('/jobs', function(req, res, next) {
   });
 });
 
+/* get specific job by exampleId */
+router.get('/job/:id', function(req, res, next){
+  Job.findOne({exampleId : req.params.id},
+          {content_image: 1, style_image: 1, final_image: 1},
+    function(err, job){
+    if(err) {next(err, req, res); return;}
+    res.send(job);
+  });
+});
 
 /* POST job complete 
  * Steps:
@@ -83,8 +94,8 @@ var uploadImgs = upload.fields([
 router.post('/job', uploadImgs, function(req, res, next) {
 
   // do not do anything for dev purposes
-  res.sendStatus(500);
-  return;
+  // res.sendStatus(500);
+  // return;
 
 
   var filesToProcess = [];

@@ -2,7 +2,7 @@ var React = require('react'),
     UploadForm = require('./UploadForm'),
     Link = require('react-router').Link,
     Overlay = require('material-ui/lib/overlay'),    
-    Examples = require('./Examples'),
+    ExamplesSection = require('./ExamplesSection'),
     FlexSection = require('./FlexSection'),
     styles = require('../styles'),
     {Tabs, Tab} = require('material-ui/lib/tabs');
@@ -103,7 +103,7 @@ var HomePage = React.createClass({
               <UploadForm />
             </Tab>
             <Tab label="Examples" value="examples">
-              <Examples examples={examplesData}/>
+              <ExamplesSection examples={examplesData}/>
             </Tab>
           </Tabs>
         </div>

@@ -2,15 +2,10 @@ var React = require("react"),
     ReactDom = require('react-dom'),
     Welcome = require('./components/welcome'),
     HomePage = require('./components/Home'),
+    MyPhotoSection = require('./components/MyPhotoSection'),
     SlideShow = require('./components/SlideShow'),
     Footer = require('./components/Footer'),
-    injectTapEventPlugin = require("react-tap-event-plugin"),
-    darkTheme = require('material-ui/lib/styles/raw-themes/dark-raw-theme'),
-    ThemeManager = require('material-ui/lib/styles/theme-manager');
-
-//require css files for webpack magic
-
-
+    injectTapEventPlugin = require("react-tap-event-plugin");
 
 injectTapEventPlugin();
 
@@ -44,6 +39,7 @@ const MainApp = React.createClass({
               <Router>
                 <Route path='/' component={Welcome} />
                 <Route path='/home/:tab' component={HomePage} />
+                <Route path='/view/:id' component={MyPhotoSection} />
               </Router>
               <Footer />
             </div>

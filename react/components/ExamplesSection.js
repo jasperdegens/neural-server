@@ -1,10 +1,9 @@
 var React = require('react'),
     styles = require('../styles'),
-    RaisedButton = require('material-ui/lib/raised-button'),
-    ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+    Example = require('./Example'),
+    RaisedButton = require('material-ui/lib/raised-button');
 
-
-var Examples = React.createClass({
+var ExamplesSection = React.createClass({
 
   getInitialState : function(){
     return {
@@ -34,22 +33,14 @@ var Examples = React.createClass({
 
   render : function(){
     var gutter = '10px';
-    var flexItemHalfStyle = {flex: '1'};
-    var imgStyle = {width: '100%', display: 'block'};
 
     return (
       <div>
-        <div key={'slide' + this.state.currSlide} style={Object.assign({}, styles.flexContainer, {margin: '10px 0'})}>          
-          <div style={Object.assign({}, flexItemHalfStyle, {marginRight:gutter})}>
-            <img style={imgStyle} src={this.state.examples[this.state.currSlide].content_image}/>
-          </div>
-          <div style={flexItemHalfStyle}>
-            <img style={imgStyle} src={this.state.examples[this.state.currSlide].style_image}/>
-          </div>
-        </div>
-        <div>
-          <img style={{width: '100%'}} src={this.state.examples[this.state.currSlide].final_image} />
-        </div>
+        <Example
+            imageSpacing={gutter} 
+            topLeftImage={this.state.examples[this.state.currSlide].content_image}
+            topRightImage={this.state.examples[this.state.currSlide].style_image}
+            mainImage={this.state.examples[this.state.currSlide].final_image} />
         <div style={{textAlign: 'center', marginTop: '10px'}}>
           <RaisedButton style={{marginRight: '20px'}} onClick={this.handleLeftClick} label="Previous" />
           <RaisedButton secondary={true} onClick={this.handleRightClick} label="Next" />
@@ -60,6 +51,4 @@ var Examples = React.createClass({
 
 });
 
-
-
-module.exports = Examples;
+module.exports = ExamplesSection;

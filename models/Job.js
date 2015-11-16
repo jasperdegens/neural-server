@@ -12,6 +12,7 @@ var jobSchema = new mongoose.Schema({
   exampleId : {type: String, unique: true} // used when sending link
 });
 
+/* create exampleID for sending links to view example */
 jobSchema.pre('save', function(next){
   if(!this.exampleId){
     this.exampleId = this.content_image.replace(/\.[^/.]+$/, "");
