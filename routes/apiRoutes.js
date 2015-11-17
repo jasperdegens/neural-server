@@ -94,11 +94,6 @@ var uploadImgs = upload.fields([
 ]);
 router.post('/job', uploadImgs, function(req, res, next) {
 
-  // do not do anything for dev purposes
-  // res.sendStatus(500);
-  // return;
-
-
   var filesToProcess = [];
   filesToProcess.push(processImage(req.files.content_image[0]));
   

@@ -1,22 +1,20 @@
 doctype html
 html
   head
-    title= title
+    title Neuarl Painter
     meta(charset="utf-8")
     meta(http-equiv="x-ua-compatible" content="ie=edge")
     meta(name="description", content="")
     meta(name="viewport", content="width=device-width initial-scale=1")
 
     link(rel="apple-touch-icon" href="apple-touch-icon.png")
-    //- link(rel='stylesheet', href='/stylesheets/uikit.almost-flat.min.css')
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css")
     link(href='https://fonts.googleapis.com/css?family=Hind+Vadodara:300,700,500', rel='stylesheet', type='text/css')
-    //- link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/react_styles.css')
   body.main-color
     .content#app
 
-    script(src='http://localhost:8000/javascripts/bundle.js')
+    script(src='/javascripts/bundle.js')
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', 'UA-38625375-2', 'auto');

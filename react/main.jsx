@@ -14,16 +14,6 @@ import {Router, Route, Link} from 'react-router';
 
 const MainApp = React.createClass({
 
-    // childContextTypes : {
-    //   muiTheme: React.PropTypes.object
-    // },
-
-    // getChildContext() {
-    //   return {
-    //     muiTheme: ThemeManager.getMuiTheme(darkTheme),
-    //   };
-    // },
-
     render() {
 
         var slides = [

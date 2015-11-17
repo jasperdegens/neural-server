@@ -5,9 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
 var apiRoutes = require('./routes/apiRoutes');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -27,17 +25,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Main Routes for original app
-app.use('/', routes);
+app.get('/', function(req, res){
+  res.render('layout_react');
+});
 
 // API Routes
 // could move this to a microservice in future
 app.use('/api', apiRoutes);
-
-// React App route
-// should turn this into static resource -- sendFile e.g.
-app.get('/react', function(req, res){
-  res.render('layout_react', {});
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -64,7 +64,7 @@ var MyPhotoSection = React.createClass({
             topRightImage={this.state.baseURL + this.state.images.style_image}
             mainImage={this.state.baseURL + this.state.images.final_image} />) : null;
     var loadingContent = (
-        <div style={{minHeight: '200px'}}>
+        <div style={{minHeight: '200px', paddingTop: '50px'}}>
           <LinearProgress
               mode="determinate"
               value={this.state.percentLoaded} 
@@ -88,7 +88,7 @@ var MyPhotoSection = React.createClass({
             >Neural Painter</h1>
           {content}
           <div style={{textAlign: 'center', marginTop: '10px'}}>
-            {this.state.images ? 
+            {this.state.status === 'loaded' ? 
               <form style={{display: 'inline-block'}} 
                     method="get" 
                     action={this.state.baseURL + this.state.images.final_image}>

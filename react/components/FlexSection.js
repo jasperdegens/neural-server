@@ -4,8 +4,6 @@ var React = require("react"),
 
 var FlexSection = React.createClass({
 
-
-
   render : function() {
     return (
       <div style={Object.assign({},
